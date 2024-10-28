@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apostle.Ahwha - Bible App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            margin: 0;
+            color: black;
+        }
+        nav {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 200px;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            border-right: 1px solid #ccc;
+        }
+        nav a {
+            display: block;
+            padding: 10px;
+            color: black;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background: rgba(200, 200, 200, 0.5);
+        }
+        main {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Apostle.Ahwha</h1>
+</header>
+
+<nav>
+    <h3>Menu</h3>
+    <a href="#" onclick="fetchBibles()">Fetch Bibles</a>
+    <a href="#" onclick="fetchAudioBibles()">Fetch Audio Bibles</a>
+    <a href="#" onclick="searchBible()">Search Bible</a>
+</nav>
+
+<main>
+    <div id="content">
+        <h2>Welcome to Apostle.Ahwha</h2>
+        <p>Use the menu to fetch Bible data.</p>
+    </div>
+</main>
+
+<script>
+    const apiKey = 'ba3c8247c3f559f0c2d3d160faccd001';
+    const baseUrl = 'https://api.scripture.api.bible/v1/bibles';
+
+    async function fetchBibles() {
+        const response = await fetch(`${baseUrl}`, { headers: { 'api-key': apiKey } });
+        const data = await response.json();
+        const bibles = data.data;
+        displayContent(bibles.map(bible => `<button class="button" onclick="fetchBooks('${bible.id}')">${bible.name}</button>`).join(' '));
+    }
+
+    async function fetchAudioBibles() {
+        const response = await fetch(`${baseUrl}/audio-bibles`, { headers: { 'api-key': apiKey } });
+        const data = await response.json();
+        displayContent(data.data.map(audioBible => audioBible.name).join(', '));
+    }
+
+    async function fetchBooks(bibleId) {
+        const response = await fetch(`${baseUrl}/${bibleId}/books`, { headers: { 'api-key': apiKey } });
+        const data = await response.json();
+        const books = data.data;
+        displayContent(books.map(book => `<button class="button" onclick="fetchChapters('${bibleId}', '${book.id}')">${book.name}</button>`).join(' '));
+    }
+
+    async function fetchChapters(bibleId, bookId) {
+        const response = await fetch(`${baseUrl}/${bibleId}/books/${bookId}/chapters`, { headers: { 'api-key': apiKey } });
+        const data = await response.json();
+        const chapters = data.data;
+        displayContent(chapters.map(chapter => `<button class="button" onclick="fetchPassage('${bibleId}', '${chapter.id}')">${chapter.name}</button>`).join(' '));
+    }
+
+    async function fetchPassage(bibleId, passageId = 'Heb.4.7') {
+        const response = await fetch(`${baseUrl}/${bibleId}/passages/${passageId}`, { headers: { 'api-key': apiKey } });
+        const data = await response.json();
+        displayContent(`Passage: ${data.data.content}`);
+    }
+
+    async function searchBible(bibleId = 'yourBibleId', keyword = 'love') {
+        const response = await fetch(`${baseUrl}/${bibleId}/search?query=${keyword}`, { headers: { 'api-key': apiKey } });
+        const data = await response.json();
+        displayContent(data.data.map(result => result.content).join('<br/>'));
+    }
+
+    function displayContent(content) {
+        const contentDiv = document.getElementById('content');
+        contentDiv.innerHTML = `<h2>Results</h2><p>${content}</p>`;
+    }
+</script>
+</body>
+</html>

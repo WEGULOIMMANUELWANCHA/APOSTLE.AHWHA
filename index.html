@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apostle.Ahwha - Bible App</title>
+    <title>AHWHA APOSTLE - Bible App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: wheat;
         }
         header {
             position: sticky;
@@ -17,10 +17,12 @@
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
         header h1 {
             margin: 0;
             color: black;
+            font-size: 20px;
         }
         .container {
             width: 100%;
@@ -131,12 +133,13 @@
 
         /* Footer */
         footer {
-            position: relative;
+            position: sticky;
+            bottom: 0;
             background-color: #fff;
             padding: 10px;
             text-align: center;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-            margin-top: auto;
+            width: 100%;
         }
 
         footer p {
@@ -148,20 +151,40 @@
             color: #FF5733; /* Red color for visibility */
             font-weight: bold;
         }
+
+        /* A-Z Scroller */
+        .az-scroller {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .az-scroller button {
+            border: none;
+            background-color: transparent;
+            font-size: 14px;
+            color: #333;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .az-scroller button:hover {
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Apostle.Ahwha</h1>
+    <h1>AHWHA APOSTLE</h1>
 </header>
 
 <div class="container">
     <!-- Left Sidebar (App Provider Area) -->
     <div class="sidebar left-sidebar" id="leftSidebar">
         <h3>App Provider Area</h3>
-        <a href="#" onclick="fetchBibles()">All Bibles Apps</a>
-        <a href="#" onclick="fetchAudioBibles()">All Audio Bibles</a>
+        <a href="#" onclick="fetchBibles()">All Ebook Bibles</a> 
+        <a href="#" onclick="fetchAudioBibles()">All Audio Bibles</a> 
         <a href="#" onclick="searchBible()">Search Bible</a>
     </div>
 
@@ -195,11 +218,19 @@
 
     <!-- Main Content -->
     <div class="main-content">
+        <div class="az-scroller">
+            <!-- A-Z Scroller Guide -->
+            <button onclick="scrollToBible('A')">A</button>
+            <button onclick="scrollToBible('B')">B</button>
+            <button onclick="scrollToBible('C')">C</button>
+            <!-- Continue for D to Z -->
+            <button onclick="scrollToBible('Z')">Z</button>
+        </div>
         <div class="search-container">
             <input type="text" class="search-input" id="searchInput" placeholder="Search Bible..." onkeyup="searchBible()">
         </div>
         <div id="content">
-            <h2>Welcome to Apostle.Ahwha</h2>
+            <h2>Welcome to AHWHA APOSTLE</h2>
             <p>Use the menu to fetch Bible data.</p>
         </div>
     </div>
@@ -237,39 +268,46 @@
         const response = await fetch(`${baseUrl}/${bibleId}/books/${bookId}/chapters`, { headers: { 'api-key': apiKey } });
         const data = await response.json();
         const chapters = data.data;
-        displayContent(chapters.map(chapter => `<button class="button" onclick="fetchPassage('${bibleId}', '${chapter.id}')">${chapter.number}</button>`).join(' '));
+        displayContent(chapters.map(chapter => `<button class="button" onclick="fetchContent('${bibleId}', '${chapter.id}')">${chapter.reference}</button>`).join(' '));
     }
 
-    async function fetchPassage(bibleId, passageId = 'Heb.4.7') {
-        const response = await fetch(`${baseUrl}/${bibleId}/passages/${passageId}`, { headers: { 'api-key': apiKey } });
+    async function fetchContent(bibleId, chapterId) {
+        const response = await fetch(`${baseUrl}/${bibleId}/chapters/${chapterId}`, { headers: { 'api-key': apiKey } });
         const data = await response.json();
-        displayContent(`Passage: ${data.data.content}`);
+        displayContent(data.data.content);
     }
 
-    function searchBible() {
-        const keyword = document.getElementById('searchInput').value;
-        if (keyword) {
-            // Implement search functionality here using the API
-            displayContent(`Searching for: ${keyword}... (Functionality to be implemented)`);
-        } else {
-            displayContent('Please enter a keyword to search.');
-        }
-    }
-
-    function displayContent(content) {
-        const contentDiv = document.getElementById('content');
-        contentDiv.innerHTML = `<h2>Results</h2><p>${content}</p>`;
-    }
-
-    function showComingSoon() {
-        displayContent('This feature is coming soon!');
+    function displayContent(html) {
+        document.getElementById('content').innerHTML = html;
     }
 
     function toggleSidebar(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
+        const otherSidebarId = sidebarId === 'leftSidebar' ? 'rightSidebar' : 'leftSidebar';
+        const otherSidebar = document.getElementById(otherSidebarId);
+
         sidebar.classList.toggle('active');
+        if (otherSidebar.classList.contains('active')) {
+            otherSidebar.classList.remove('active');
+        }
+    }
+
+    function showComingSoon() {
+        alert('Coming Soon!');
+    }
+
+    function searchBible() {
+        const query = document.getElementById('searchInput').value;
+        if (query) {
+            alert(`Searching for "${query}"`);
+        }
+    }
+
+    function scrollToBible(letter) {
+        alert(`Scrolling to Bibles starting with "${letter}"`);
     }
 </script>
 </body>
 </html>
+
 

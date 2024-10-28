@@ -22,36 +22,104 @@
             margin: 0;
             color: black;
         }
-        nav {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+            display: flex;
+        }
+        .sidebar {
             position: fixed;
-            left: 0;
-            top: 60px;
-            width: 200px;
-            height: calc(100% - 60px);
+            top: 0;
+            width: 220px;
+            height: 100%;
+            background-color: #333;
+            color: #fff;
             overflow-y: auto;
-            border-right: 1px solid #ccc;
+            transition: transform 0.3s ease;
         }
-        nav a {
+        
+        .left-sidebar {
+            left: 0;
+            transform: translateX(-100%);
+        }
+        
+        .right-sidebar {
+            right: 0;
+            transform: translateX(100%);
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #444;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar a {
             display: block;
-            padding: 10px;
-            color: black;
+            padding: 12px 15px;
+            color: #fff;
             text-decoration: none;
-            transition: background 0.3s;
         }
-        nav a:hover {
-            background: rgba(200, 200, 200, 0.5);
+
+        .sidebar a:hover {
+            background-color: #555;
         }
-        main {
-            margin-left: 220px;
+
+        .hamburger {
+            position: fixed;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .left-hamburger {
+            left: 10px;
+        }
+
+        .right-hamburger {
+            right: 10px;
+        }
+
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background-color: #333;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+
+        .main-content {
             padding: 20px;
+            margin-top: 60px;
+            width: 100%;
+            margin-left: 250px; /* Ensure content is not hidden by the left sidebar */
         }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Button Styles */
         .button {
-            background-color: #4CAF50;
+            background-color: #007BFF; /* Blue Button */
             border: none;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -59,6 +127,26 @@
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            background-color: #fff;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Coming Soon Note */
+        .coming-soon {
+            color: #FF5733; /* Red color for visibility */
+            font-weight: bold;
         }
     </style>
 </head>
@@ -68,19 +156,58 @@
     <h1>Apostle.Ahwha</h1>
 </header>
 
-<nav>
-    <h3>Menu</h3>
-    <a href="#" onclick="fetchBibles()">Fetch Bibles</a>
-    <a href="#" onclick="fetchAudioBibles()">Fetch Audio Bibles</a>
-    <a href="#" onclick="searchBible()">Search Bible</a>
-</nav>
-
-<main>
-    <div id="content">
-        <h2>Welcome to Apostle.Ahwha</h2>
-        <p>Use the menu to fetch Bible data.</p>
+<div class="container">
+    <!-- Left Sidebar (App Provider Area) -->
+    <div class="sidebar left-sidebar" id="leftSidebar">
+        <h3>App Provider Area</h3>
+        <a href="#" onclick="fetchBibles()">All Bibles Apps</a>
+        <a href="#" onclick="fetchAudioBibles()">All Audio Bibles</a>
+        <a href="#" onclick="searchBible()">Search Bible</a>
     </div>
-</main>
+
+    <!-- Right Sidebar (App User Area) -->
+    <div class="sidebar right-sidebar" id="rightSidebar">
+        <h3>App User Area</h3>
+        <a href="#" onclick="showComingSoon()">Address</a>
+        <a href="#" onclick="showComingSoon()">Arena</a>
+        <a href="#" onclick="showComingSoon()">Alerts</a>
+        <a href="#" onclick="showComingSoon()">Activity</a>
+        <a href="#" onclick="showComingSoon()">Analysis</a>
+        <a href="#" onclick="showComingSoon()">Acquire</a>
+        <a href="#" onclick="showComingSoon()">Atlas</a>
+        <a href="#" onclick="showComingSoon()">Associations</a>
+        <a href="#" onclick="showComingSoon()">Attention</a>
+        <a href="#" onclick="showComingSoon()">Articles</a>
+    </div>
+
+    <!-- Hamburger Buttons -->
+    <div class="hamburger left-hamburger" onclick="toggleSidebar('leftSidebar')">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    
+    <div class="hamburger right-hamburger" onclick="toggleSidebar('rightSidebar')">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search Bible..." onkeyup="searchBible()">
+        </div>
+        <div id="content">
+            <h2>Welcome to Apostle.Ahwha</h2>
+            <p>Use the menu to fetch Bible data.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p class="coming-soon">Support the further development of the Apostolic Christian Community Apps Project by donating to the developer at <a href="mailto:weguloimmanuelwancha@gmail.com">weguloimmanuelwancha@gmail.com</a></p>
+</footer>
 
 <script>
     const apiKey = 'ba3c8247c3f559f0c2d3d160faccd001';
@@ -110,7 +237,7 @@
         const response = await fetch(`${baseUrl}/${bibleId}/books/${bookId}/chapters`, { headers: { 'api-key': apiKey } });
         const data = await response.json();
         const chapters = data.data;
-        displayContent(chapters.map(chapter => `<button class="button" onclick="fetchPassage('${bibleId}', '${chapter.id}')">${chapter.name}</button>`).join(' '));
+        displayContent(chapters.map(chapter => `<button class="button" onclick="fetchPassage('${bibleId}', '${chapter.id}')">${chapter.number}</button>`).join(' '));
     }
 
     async function fetchPassage(bibleId, passageId = 'Heb.4.7') {
@@ -119,16 +246,30 @@
         displayContent(`Passage: ${data.data.content}`);
     }
 
-    async function searchBible(bibleId = 'yourBibleId', keyword = 'love') {
-        const response = await fetch(`${baseUrl}/${bibleId}/search?query=${keyword}`, { headers: { 'api-key': apiKey } });
-        const data = await response.json();
-        displayContent(data.data.map(result => result.content).join('<br/>'));
+    function searchBible() {
+        const keyword = document.getElementById('searchInput').value;
+        if (keyword) {
+            // Implement search functionality here using the API
+            displayContent(`Searching for: ${keyword}... (Functionality to be implemented)`);
+        } else {
+            displayContent('Please enter a keyword to search.');
+        }
     }
 
     function displayContent(content) {
         const contentDiv = document.getElementById('content');
         contentDiv.innerHTML = `<h2>Results</h2><p>${content}</p>`;
     }
+
+    function showComingSoon() {
+        displayContent('This feature is coming soon!');
+    }
+
+    function toggleSidebar(sidebarId) {
+        const sidebar = document.getElementById(sidebarId);
+        sidebar.classList.toggle('active');
+    }
 </script>
 </body>
 </html>
+

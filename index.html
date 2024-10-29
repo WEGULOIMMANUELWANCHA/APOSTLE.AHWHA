@@ -35,9 +35,10 @@
             background-color: #333;
             color: #fff;
             overflow-y: auto;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
             visibility: hidden;
+            z-index: 5;
         }
 
         .left-sidebar {
@@ -104,26 +105,26 @@
             transition: all 0.3s;
         }
 
+        /* Close icon style */
         .close-icon {
-            display: none;
+            transform: rotate(45deg);
             position: relative;
+            width: 30px;
+            height: 30px;
         }
 
-        .close-icon::before, .close-icon::after {
+        .close-icon::before,
+        .close-icon::after {
             content: '';
             position: absolute;
             width: 30px;
             height: 3px;
             background-color: #333;
-            transition: all 0.3s;
+            top: 13px; /* Centered vertically */
         }
 
         .close-icon::before {
-            transform: rotate(45deg);
-        }
-
-        .close-icon::after {
-            transform: rotate(-45deg);
+            transform: rotate(90deg);
         }
 
         /* Main Content */
@@ -223,7 +224,7 @@
 
     function updateHamburgerIcon(sidebarId) {
         const hamburger = document.querySelector(`.hamburger.${sidebarId === 'leftSidebar' ? 'left-hamburger' : 'right-hamburger'}`);
-        hamburger.innerHTML = '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>';
+        hamburger.innerHTML = '<div class="close-icon"></div>'; // Use the close icon
     }
 
     function resetHamburgerIcons() {
@@ -252,7 +253,7 @@
         }, 2000);
     }
 
-    // Mouseover events to handle sidebar hover close
+    // Close sidebars when mouse leaves the sidebar area
     document.querySelectorAll('.sidebar').forEach(sidebar => {
         sidebar.addEventListener('mouseleave', () => {
             sidebar.classList.remove('active');

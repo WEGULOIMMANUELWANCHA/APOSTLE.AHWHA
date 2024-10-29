@@ -105,8 +105,25 @@
         }
 
         .close-icon {
+            display: none;
+            position: relative;
+        }
+
+        .close-icon::before, .close-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 3px;
+            background-color: #333;
+            transition: all 0.3s;
+        }
+
+        .close-icon::before {
             transform: rotate(45deg);
-            background-color: #333; /* Maintain color for close icon */
+        }
+
+        .close-icon::after {
+            transform: rotate(-45deg);
         }
 
         /* Main Content */
@@ -235,6 +252,14 @@
         }, 2000);
     }
 
+    // Mouseover events to handle sidebar hover close
+    document.querySelectorAll('.sidebar').forEach(sidebar => {
+        sidebar.addEventListener('mouseleave', () => {
+            sidebar.classList.remove('active');
+            resetHamburgerIcons();
+        });
+    });
+
     // Hover effect for hamburger
     document.querySelectorAll('.hamburger').forEach(hamburger => {
         hamburger.addEventListener('mouseover', () => {
@@ -249,7 +274,7 @@
         hamburger.addEventListener('mouseout', () => {
             const sidebarId = hamburger.classList.contains('left-hamburger') ? 'leftSidebar' : 'rightSidebar';
             const sidebar = document.getElementById(sidebarId);
-            if (!sidebar.classList.contains('active')) {
+            if (sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
                 resetHamburgerIcons();
             }

@@ -36,6 +36,8 @@
             color: #fff;
             overflow-y: auto;
             transition: transform 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
         }
 
         .left-sidebar {
@@ -50,6 +52,8 @@
 
         .sidebar.active {
             transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
         }
 
         .sidebar h3 {
@@ -81,6 +85,7 @@
             background-color: #f0e5d1; /* Light brown (Wheat) */
             padding: 5px;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
         .left-hamburger {
@@ -110,6 +115,10 @@
             margin-top: 60px;
             width: 100%;
             text-align: center; /* Center title */
+        }
+
+        h1 {
+            font-size: 2em; /* Adjusted size */
         }
 
         /* Responsive Design */
@@ -145,7 +154,7 @@
     <!-- Right Sidebar -->
     <div class="sidebar right-sidebar" id="rightSidebar">
         <h3>App User Area</h3>
-        <a href="#" onclick="showComingSoon()">Adress</a>
+        <a href="#" onclick="showComingSoon()">Address</a>
         <a href="#" onclick="showComingSoon()">Arena</a>
         <a href="#" onclick="showComingSoon()">Alerts</a>
         <a href="#" onclick="showComingSoon()">Acquire</a>
@@ -188,6 +197,7 @@
         sidebar.classList.toggle('active');
         if (sidebar.classList.contains('active')) {
             otherSidebar.classList.remove('active');
+            resetHamburgerIcons();
             updateHamburgerIcon(sidebarId);
         } else {
             resetHamburgerIcons();
@@ -224,6 +234,27 @@
             note.style.display = 'none';
         }, 2000);
     }
+
+    // Hover effect for hamburger
+    document.querySelectorAll('.hamburger').forEach(hamburger => {
+        hamburger.addEventListener('mouseover', () => {
+            const sidebarId = hamburger.classList.contains('left-hamburger') ? 'leftSidebar' : 'rightSidebar';
+            const sidebar = document.getElementById(sidebarId);
+            if (!sidebar.classList.contains('active')) {
+                sidebar.classList.add('active');
+                updateHamburgerIcon(sidebarId);
+            }
+        });
+        
+        hamburger.addEventListener('mouseout', () => {
+            const sidebarId = hamburger.classList.contains('left-hamburger') ? 'leftSidebar' : 'rightSidebar';
+            const sidebar = document.getElementById(sidebarId);
+            if (!sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                resetHamburgerIcons();
+            }
+        });
+    });
 </script>
 
 </body>

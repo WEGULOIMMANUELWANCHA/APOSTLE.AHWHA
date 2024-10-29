@@ -36,7 +36,6 @@
             color: #fff;
             overflow-y: auto;
             transition: transform 0.3s ease;
-            z-index: 1;
         }
 
         .left-sidebar {
@@ -79,6 +78,9 @@
             flex-direction: column;
             cursor: pointer;
             z-index: 10;
+            background-color: #f0e5d1; /* Light brown (Wheat) */
+            padding: 5px;
+            border-radius: 5px;
         }
 
         .left-hamburger {
@@ -99,7 +101,7 @@
 
         .close-icon {
             transform: rotate(45deg);
-            background-color: #333;
+            background-color: #333; /* Maintain color for close icon */
         }
 
         /* Main Content */
@@ -180,33 +182,34 @@
     // Toggle sidebar visibility
     function toggleSidebar(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
-        const isActive = sidebar.classList.toggle('active');
+        const otherSidebarId = sidebarId === 'leftSidebar' ? 'rightSidebar' : 'leftSidebar';
+        const otherSidebar = document.getElementById(otherSidebarId);
         
-        if (isActive) {
-            // Change hamburger to close icon
-            updateHamburgerIcon(sidebarId, true);
+        sidebar.classList.toggle('active');
+        if (sidebar.classList.contains('active')) {
+            otherSidebar.classList.remove('active');
+            updateHamburgerIcon(sidebarId);
         } else {
-            // Reset hamburger icon
-            updateHamburgerIcon(sidebarId, false);
+            resetHamburgerIcons();
         }
     }
 
-    function updateHamburgerIcon(sidebarId, isOpen) {
+    function updateHamburgerIcon(sidebarId) {
         const hamburger = document.querySelector(`.hamburger.${sidebarId === 'leftSidebar' ? 'left-hamburger' : 'right-hamburger'}`);
-        hamburger.innerHTML = isOpen 
-            ? '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>' 
-            : '<div></div><div></div><div></div>';
+        hamburger.innerHTML = '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>';
+    }
+
+    function resetHamburgerIcons() {
+        document.querySelector('.left-hamburger').innerHTML = '<div></div><div></div><div></div>';
+        document.querySelector('.right-hamburger').innerHTML = '<div></div><div></div><div></div>';
     }
 
     // Close sidebars when clicking outside
     document.addEventListener('click', function(event) {
         const leftSidebar = document.getElementById('leftSidebar');
         const rightSidebar = document.getElementById('rightSidebar');
-        const leftHamburger = document.querySelector('.left-hamburger');
-        const rightHamburger = document.querySelector('.right-hamburger');
-
-        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target) && 
-            !leftHamburger.contains(event.target) && !rightHamburger.contains(event.target)) {
+        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target) &&
+            !event.target.classList.contains('hamburger')) {
             leftSidebar.classList.remove('active');
             rightSidebar.classList.remove('active');
             resetHamburgerIcons();

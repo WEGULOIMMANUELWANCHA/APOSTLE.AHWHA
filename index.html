@@ -3,263 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHWHA APOSTLE</title>
+    <title>Responsive UI with Dual Sidebars</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5dc; /* Very light wheat/brown */
+        /* General Reset */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        header {
-            text-align: center;
-            padding: 20px;
-        }
-        .menu {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: none;
-            background-color: #d2b48c; /* Light brown */
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .menu.active {
-            display: block;
-        }
-        .menu ul {
-            list-style-type: none;
             padding: 0;
         }
-        .menu li {
-            margin: 10px 0;
-            cursor: pointer;
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            background-color: #f0e5d1; /* Light brown (Wheat) */
         }
+
+        /* Main container */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+        }
+
+        /* Sidebars */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            width: 220px;
+            height: 100%;
+            background-color: #333;
+            color: #fff;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .left-sidebar {
+            left: 0;
+            transform: translateX(-100%);
+        }
+
+        .right-sidebar {
+            right: 0;
+            transform: translateX(100%);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #444;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 15px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Hamburger Button */
         .hamburger {
+            position: fixed;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
             cursor: pointer;
-            font-size: 30px;
-            color: #000;
+            z-index: 10;
         }
-        .content {
-            margin-top: 80px;
-            width: 80%;
+
+        .left-hamburger {
+            left: 10px;
         }
-        .button {
-            margin: 5px;
-            padding: 10px 15px;
-            border: none;
-            background-color: #8fbc8f;
-            color: white;
-            cursor: pointer;
+
+        .right-hamburger {
+            right: 10px;
         }
-        .button:hover {
-            background-color: #66cdaa;
+
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background-color: #333;
+            margin: 5px 0;
+            transition: all 0.3s;
         }
-        .icon {
-            margin-right: 8px;
+
+        .close-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            margin-top: 60px;
+            width: 100%;
+            text-align: center; /* Center title */
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 250px;
+            }
+
+            .main-content {
+                margin: 0 250px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>AHWHA APOSTLE</h1>
-        <span class="hamburger">&#9776;</span>
-    </header>
-    
-    <div class="menu" id="menu">
-        <ul>
-            <li onclick="toggleSubMenu('applications')">
-                <span class="icon">📁</span>Applications
-            </li>
-            <div id="applications" style="display: none;">
-                <li onclick="fetchBibles()">
-                    <span class="icon">📖</span>Bibles
-                </li>
-                <div id="bibleOptions" style="display: none;">
-                    <li onclick="fetchAudioBibles()">
-                        <span class="icon">🔊</span>Audio Bibles
-                    </li>
-                    <li onclick="fetchEBookBibles()">
-                        <span class="icon">📚</span>eBook Bibles
-                    </li>
-                </div>
-            </div>
-            <li onclick="fetchDevotionals()">
-                <span class="icon">🙏</span>Devotionals
-            </li>
-            <li onclick="fetchCommentaries()">
-                <span class="icon">💬</span>Commentaries
-            </li>
-            <li onclick="fetchReadingPlans()">
-                <span class="icon">🗓️</span>Reading Plans
-            </li>
-            <!-- Add more menu items as needed -->
-        </ul>
+
+<div class="container">
+    <!-- Left Sidebar -->
+    <div class="sidebar left-sidebar" id="leftSidebar">
+        <h3>App Provider Area</h3>
+        <a href="#" onclick="showComingSoon()">Applications</a>
+        <a href="#" onclick="showComingSoon()">Atlas</a>
+        <a href="#" onclick="showComingSoon()">Analytics</a>
+        <a href="#" onclick="showComingSoon()">Accounting</a>
+        <a href="#" onclick="showComingSoon()">Articles</a>
+        <a href="#" onclick="showComingSoon()">Associations</a>
+        <a href="#" onclick="showComingSoon()">Announcements</a>
+        <a href="#" onclick="showComingSoon()">Acquire</a>
+        <a href="#" onclick="showComingSoon()">Advertisement</a>
+        <a href="#" onclick="showComingSoon()">Activity</a>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="sidebar right-sidebar" id="rightSidebar">
+        <h3>App User Area</h3>
+        <a href="#" onclick="showComingSoon()">Admin</a>
+        <a href="#" onclick="showComingSoon()">Arena</a>
+        <a href="#" onclick="showComingSoon()">Alerts</a>
+        <a href="#" onclick="showComingSoon()">Activity</a>
+        <a href="#" onclick="showComingSoon()">Analysis</a>
+        <a href="#" onclick="showComingSoon()">Acquire</a>
+        <a href="#" onclick="showComingSoon()">Atlas</a>
+        <a href="#" onclick="showComingSoon()">Associations</a>
+        <a href="#" onclick="showComingSoon()">Adverts</a>
+        <a href="#" onclick="showComingSoon()">Articles</a>
+    </div>
+
+    <!-- Hamburger Buttons -->
+    <div class="hamburger left-hamburger" onclick="toggleSidebar('leftSidebar', 'rightSidebar')">
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
     
-    <div class="content" id="content"></div>
+    <div class="hamburger right-hamburger" onclick="toggleSidebar('rightSidebar', 'leftSidebar')">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
 
-    <script>
-        const apiKey = 'ba3c8247c3f559f0c2d3d160faccd001';
-        const baseUrl = 'https://api.scripture.api.bible/v1';
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>APOSTLE</h1>
+        <p>Explore the app features using the sidebars.</p>
+        <p id="comingSoonNote" style="display: none; color: red; font-weight: bold;">Coming Soon!</p>
+    </div>
+</div>
 
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('active');
-        });
-
-        function toggleSubMenu(menuId) {
-            const subMenu = document.getElementById(menuId);
-            subMenu.style.display = subMenu.style.display === 'none' ? 'block' : 'none';
-            if (menuId === 'applications') {
-                const bibleOptions = document.getElementById('bibleOptions');
-                bibleOptions.style.display = 'none';
-            }
+<script>
+    // Toggle sidebar visibility
+    function toggleSidebar(sidebarId, otherSidebarId) {
+        const sidebar = document.getElementById(sidebarId);
+        const otherSidebar = document.getElementById(otherSidebarId);
+        sidebar.classList.toggle('active');
+        if (sidebar.classList.contains('active')) {
+            otherSidebar.classList.remove('active');
+            updateHamburgerIcon(sidebarId);
+        } else {
+            resetHamburgerIcons();
         }
+    }
 
-        function fetchBibles() {
-            fetch(`${baseUrl}/bibles`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const bibles = data.data;
-                let output = '<h2>Bibles</h2><ul>';
-                bibles.forEach(bible => {
-                    output += `<li onclick="fetchBooks('${bible.id}')">${bible.name}</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-                document.getElementById('bibleOptions').style.display = 'block';
-            });
-        }
+    function updateHamburgerIcon(sidebarId) {
+        const hamburger = document.querySelector(`.hamburger.${sidebarId === 'leftSidebar' ? 'left-hamburger' : 'right-hamburger'}`);
+        hamburger.innerHTML = '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>';
+    }
 
-        function fetchBooks(bibleId) {
-            fetch(`${baseUrl}/bibles/${bibleId}/books`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = `<h2>Books for Bible ID: ${bibleId}</h2><ul>`;
-                data.data.forEach(book => {
-                    output += `<li onclick="fetchChapters('${bibleId}', '${book.id}')">${book.name}</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
-        }
+    function resetHamburgerIcons() {
+        document.querySelector('.left-hamburger').innerHTML = '<div></div><div></div><div></div>';
+        document.querySelector('.right-hamburger').innerHTML = '<div></div><div></div><div></div>';
+    }
 
-        function fetchChapters(bibleId, bookId) {
-            fetch(`${baseUrl}/bibles/${bibleId}/books/${bookId}/chapters`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = `<h2>Chapters for Book ID: ${bookId}</h2><ul>`;
-                data.data.forEach(chapter => {
-                    output += `<li onclick="fetchVerses('${bibleId}', '${bookId}', '${chapter.id}')">Chapter ${chapter.number}</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
+    // Close sidebars when clicking outside
+    document.addEventListener('click', function(event) {
+        const leftSidebar = document.getElementById('leftSidebar');
+        const rightSidebar = document.getElementById('rightSidebar');
+        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target)) {
+            leftSidebar.classList.remove('active');
+            rightSidebar.classList.remove('active');
+            resetHamburgerIcons();
         }
+    });
 
-        function fetchVerses(bibleId, bookId, chapterId) {
-            fetch(`${baseUrl}/bibles/${bibleId}/chapters/${chapterId}/verses`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = `<h2>Verses for Chapter ID: ${chapterId}</h2><ul>`;
-                data.data.forEach(verse => {
-                    output += `<li>${verse.text} (${verse.reference})</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
-        }
+    // Show "Coming Soon" message
+    function showComingSoon() {
+        const note = document.getElementById('comingSoonNote');
+        note.style.display = 'block';
+        setTimeout(() => {
+            note.style.display = 'none';
+        }, 2000);
+    }
+</script>
 
-        function fetchAudioBibles() {
-            fetch(`${baseUrl}/audio-bibles`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = '<h2>Audio Bibles</h2><ul>';
-                data.data.forEach(audioBible => {
-                    output += `<li onclick="fetchAudioBooks('${audioBible.id}')">${audioBible.name}</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
-        }
-
-        function fetchAudioBooks(audioBibleId) {
-            fetch(`${baseUrl}/audio-bibles/${audioBibleId}/books`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = `<h2>Books for Audio Bible ID: ${audioBibleId}</h2><ul>`;
-                data.data.forEach(book => {
-                    output += `<li onclick="fetchAudioChapters('${audioBibleId}', '${book.id}')">${book.name}</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
-        }
-
-        function fetchAudioChapters(audioBibleId, bookId) {
-            fetch(`${baseUrl}/audio-bibles/${audioBibleId}/books/${bookId}/chapters`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = `<h2>Chapters for Audio Book ID: ${bookId}</h2><ul>`;
-                data.data.forEach(chapter => {
-                    output += `<li onclick="fetchAudioVerses('${audioBibleId}', '${bookId}', '${chapter.id}')">Chapter ${chapter.number}</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
-        }
-
-        function fetchAudioVerses(audioBibleId, bookId, chapterId) {
-            fetch(`${baseUrl}/audio-bibles/${audioBibleId}/books/${bookId}/chapters/${chapterId}`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let output = `<h2>Verses for Audio Chapter ID: ${chapterId}</h2><ul>`;
-                data.data.forEach(verse => {
-                    output += `<li>${verse.text} (${verse.reference})</li>`;
-                });
-                output += '</ul>';
-                document.getElementById('content').innerHTML = output;
-            });
-        }
-
-        function fetchEBookBibles() {
-            // Placeholder for fetching eBook Bibles
-            console.log('Fetching eBook Bibles...');
-        }
-
-        function fetchDevotionals() {
-            // Placeholder for fetching devotionals
-            console.log('Fetching Devotionals...');
-        }
-
-        function fetchCommentaries() {
-            // Placeholder for fetching commentaries
-            console.log('Fetching Commentaries...');
-        }
-
-        function fetchReadingPlans() {
-            // Placeholder for fetching reading plans
-            console.log('Fetching Reading Plans...');
-        }
-    </script>
 </body>
 </html>

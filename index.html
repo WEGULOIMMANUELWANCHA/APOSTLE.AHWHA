@@ -7,180 +7,219 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #F5DEB3; /* Light wheat */
             margin: 0;
             padding: 0;
-            background-color: #f5f5dc; /* Light Wheat */
+            overflow-x: hidden;
         }
         header {
-            text-align: center;
-            padding: 20px;
-            background: #e8cba0; /* Light Brown */
-            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #8B4513; /* Brown */
+            color: white;
         }
         h1 {
-            margin: 0;
-            font-size: 2.5em;
+            text-align: center;
+            flex-grow: 1;
         }
-        nav {
+        .menu {
+            display: none;
             position: fixed;
             top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100%;
-            background: #b5896b; /* Light Brown */
-            transition: left 0.3s;
-            z-index: 1000;
-        }
-        nav.open {
             left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #D2B48C; /* Light brown */
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
         }
-        nav ul {
+        .menu.active {
+            display: block;
+            transform: translateX(0);
+        }
+        .menu ul {
             list-style-type: none;
             padding: 0;
         }
-        nav ul li {
-            padding: 15px;
-            border-bottom: 1px solid #ccc;
+        .menu li {
+            margin: 15px 0;
         }
-        nav ul li:hover {
-            background: #d5c09c;
+        .menu a {
+            text-decoration: none;
+            color: #5C4033;
         }
-        .hamburger {
+        .toggle {
             cursor: pointer;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1100;
-        }
-        .content {
-            margin-left: 20px;
-            padding: 20px;
-        }
-        .toggle-button {
+            font-size: 24px;
             background: none;
             border: none;
-            font-size: 1.5em;
-            color: #333;
-            cursor: pointer;
+            color: white;
         }
-        .close-icon {
-            color: #fff;
+        .content {
+            margin-left: 270px; /* Space for the menu */
+            padding: 20px;
+        }
+        .sub-menu {
             display: none;
         }
-        .close-icon.show {
-            display: inline;
-        }
-        .hide {
-            display: none;
+        .sub-menu.active {
+            display: block;
         }
     </style>
 </head>
 <body>
 
 <header>
+    <button class="toggle" id="toggleMenu">☰</button>
     <h1>AHWHA APOSTLE</h1>
-    <div class="hamburger" id="hamburger">
-        <button class="toggle-button">☰</button>
-    </div>
 </header>
 
-<nav id="navMenu">
+<div class="menu" id="menu">
+    <h2>Applications</h2>
     <ul>
-        <li><button class="toggle-button" onclick="toggleMenu('applications')">Applications</button></li>
-        <li id="applications" class="hide">
-            <ul>
-                <li><button class="toggle-button" onclick="fetchBibles()">Bibles</button></li>
-            </ul>
-        </li>
+        <li><a href="#" id="biblesMenu">Bibles</a></li>
     </ul>
-</nav>
+</div>
 
-<div class="content" id="content">
-    <div id="bibleList"></div>
+<div class="content">
+    <div id="biblesOptions" class="sub-menu">
+        <h2>Bibles</h2>
+        <ul>
+            <li><a href="#" id="audioBibles">Audio Bibles</a></li>
+            <li><a href="#" id="eBookBibles">E-Book Bibles</a></li>
+        </ul>
+    </div>
+    <div id="bibleVersions" class="sub-menu">
+        <h2>Bible Versions</h2>
+        <ul id="versionList"></ul>
+    </div>
+    <div id="chapterList" class="sub-menu">
+        <h2>Chapters</h2>
+        <ul id="chapters"></ul>
+    </div>
+    <div id="verseList" class="sub-menu">
+        <h2>Verses</h2>
+        <ul id="verses"></ul>
+    </div>
 </div>
 
 <script>
-    const apiKey = 'ba3c8247c3f559f0c2d3d160faccd001';
-    const baseUrl = 'https://api.scripture.api.bible/v1';
+const apiKey = 'ba3c8247c3f559f0c2d3d160faccd001';
+const baseUrl = 'https://api.scripture.api.bible/v1';
 
-    document.getElementById('hamburger').addEventListener('click', function() {
-        const navMenu = document.getElementById('navMenu');
-        navMenu.classList.toggle('open');
+document.getElementById('toggleMenu').addEventListener('click', () => {
+    const menu = document.getElementById('menu');
+    menu.classList.toggle('active');
+});
+
+document.getElementById('biblesMenu').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('biblesOptions').classList.toggle('active');
+});
+
+document.getElementById('audioBibles').addEventListener('click', (e) => {
+    e.preventDefault();
+    fetch(`${baseUrl}/audio-bibles`, {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const versions = data.data;
+        const versionList = document.getElementById('versionList');
+        versionList.innerHTML = '';
+        versions.forEach(version => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#" data-id="${version.id}" class="version">${version.name}</a>`;
+            versionList.appendChild(li);
+        });
+        document.getElementById('bibleVersions').classList.add('active');
     });
+});
 
-    function toggleMenu(menu) {
-        const appsMenu = document.getElementById('applications');
-        appsMenu.classList.toggle('hide');
-        if (appsMenu.classList.contains('hide')) {
-            closeAllMenus();
-        }
-    }
+document.getElementById('eBookBibles').addEventListener('click', (e) => {
+    e.preventDefault();
+    fetch(`${baseUrl}/bibles`, {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const versions = data.data;
+        const versionList = document.getElementById('versionList');
+        versionList.innerHTML = '';
+        versions.forEach(version => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#" data-id="${version.id}" class="version">${version.name}</a>`;
+            versionList.appendChild(li);
+        });
+        document.getElementById('bibleVersions').classList.add('active');
+    });
+});
 
-    function closeAllMenus() {
-        document.getElementById('applications').classList.add('hide');
-        document.getElementById('navMenu').classList.remove('open');
-    }
-
-    function fetchBibles() {
-        fetch(`${baseUrl}/bibles`, {
-            headers: { 'api-key': apiKey }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const bibleList = document.getElementById('bibleList');
-            bibleList.innerHTML = '';
-            data.data.forEach(bible => {
-                bibleList.innerHTML += `<button onclick="fetchBooks('${bible.id}')">${bible.name}</button><br>`;
-            });
-        })
-        .catch(error => console.error('Error fetching Bibles:', error));
-    }
-
-    function fetchBooks(bibleId) {
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('version')) {
+        e.preventDefault();
+        const bibleId = e.target.dataset.id;
         fetch(`${baseUrl}/bibles/${bibleId}/books`, {
-            headers: { 'api-key': apiKey }
+            headers: { 'Authorization': `Bearer ${apiKey}` }
         })
         .then(response => response.json())
         .then(data => {
-            const bibleList = document.getElementById('bibleList');
-            bibleList.innerHTML = '';
+            const chapters = document.getElementById('chapters');
+            chapters.innerHTML = '';
             data.data.forEach(book => {
-                bibleList.innerHTML += `<button onclick="fetchChapters('${bibleId}', '${book.id}')">${book.name}</button><br>`;
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" data-bible-id="${bibleId}" data-book-id="${book.id}" class="book">${book.name}</a>`;
+                chapters.appendChild(li);
             });
-        })
-        .catch(error => console.error('Error fetching Books:', error));
+            document.getElementById('chapterList').classList.add('active');
+        });
     }
 
-    function fetchChapters(bibleId, bookId) {
+    if (e.target.classList.contains('book')) {
+        e.preventDefault();
+        const bibleId = e.target.dataset.bibleId;
+        const bookId = e.target.dataset.bookId;
         fetch(`${baseUrl}/bibles/${bibleId}/books/${bookId}/chapters`, {
-            headers: { 'api-key': apiKey }
+            headers: { 'Authorization': `Bearer ${apiKey}` }
         })
         .then(response => response.json())
         .then(data => {
-            const bibleList = document.getElementById('bibleList');
-            bibleList.innerHTML = '';
+            const verses = document.getElementById('verses');
+            verses.innerHTML = '';
             data.data.forEach(chapter => {
-                bibleList.innerHTML += `<button onclick="fetchVerses('${bibleId}', '${bookId}', '${chapter.id}')">Chapter ${chapter.number}</button><br>`;
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" data-bible-id="${bibleId}" data-book-id="${bookId}" data-chapter-id="${chapter.id}" class="chapter">${chapter.name}</a>`;
+                verses.appendChild(li);
             });
-        })
-        .catch(error => console.error('Error fetching Chapters:', error));
+            document.getElementById('verseList').classList.add('active');
+        });
     }
 
-    function fetchVerses(bibleId, bookId, chapterId) {
-        fetch(`${baseUrl}/bibles/${bibleId}/books/${bookId}/chapters/${chapterId}/verses`, {
-            headers: { 'api-key': apiKey }
+    if (e.target.classList.contains('chapter')) {
+        e.preventDefault();
+        const bibleId = e.target.dataset.bibleId;
+        const bookId = e.target.dataset.bookId;
+        const chapterId = e.target.dataset.chapterId;
+        fetch(`${baseUrl}/bibles/${bibleId}/chapters/${chapterId}/verses`, {
+            headers: { 'Authorization': `Bearer ${apiKey}` }
         })
         .then(response => response.json())
         .then(data => {
-            const bibleList = document.getElementById('bibleList');
-            bibleList.innerHTML = '';
+            const verses = document.getElementById('verses');
+            verses.innerHTML = '';
             data.data.forEach(verse => {
-                bibleList.innerHTML += `<p>${verse.text} (${verse.reference})</p>`;
+                const li = document.createElement('li');
+                li.textContent = verse.text;
+                verses.appendChild(li);
             });
-        })
-        .catch(error => console.error('Error fetching Verses:', error));
+        });
     }
+});
 </script>
+
 </body>
 </html>
-

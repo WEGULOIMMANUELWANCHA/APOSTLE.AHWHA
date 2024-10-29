@@ -38,17 +38,11 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
             visibility: hidden;
-            z-index: 5;
-        }
-
-        .left-sidebar {
-            left: 0;
-            transform: translateX(-100%);
+            transform: translateX(-100%); /* Initially hidden on the left */
         }
 
         .right-sidebar {
-            right: 0;
-            transform: translateX(100%);
+            transform: translateX(100%); /* Initially hidden on the right */
         }
 
         .sidebar.active {
@@ -105,26 +99,29 @@
             transition: all 0.3s;
         }
 
-        /* Close icon style */
-        .close-icon {
-            transform: rotate(45deg);
+        /* Cross Icon Styles */
+        .cross-icon {
             position: relative;
             width: 30px;
             height: 30px;
         }
 
-        .close-icon::before,
-        .close-icon::after {
-            content: '';
+        .cross-icon div {
             position: absolute;
-            width: 30px;
+            width: 100%;
             height: 3px;
             background-color: #333;
-            top: 13px; /* Centered vertically */
+            transition: all 0.3s;
         }
 
-        .close-icon::before {
-            transform: rotate(90deg);
+        .cross-icon div:first-child {
+            transform: rotate(45deg);
+            top: 50%;
+        }
+
+        .cross-icon div:last-child {
+            transform: rotate(-45deg);
+            top: 50%;
         }
 
         /* Main Content */
@@ -213,6 +210,8 @@
         const otherSidebar = document.getElementById(otherSidebarId);
         
         sidebar.classList.toggle('active');
+
+        // Only close the other sidebar if the current one is opened
         if (sidebar.classList.contains('active')) {
             otherSidebar.classList.remove('active');
             resetHamburgerIcons();
@@ -224,20 +223,23 @@
 
     function updateHamburgerIcon(sidebarId) {
         const hamburger = document.querySelector(`.hamburger.${sidebarId === 'leftSidebar' ? 'left-hamburger' : 'right-hamburger'}`);
-        hamburger.innerHTML = '<div class="close-icon"></div>'; // Use the close icon
+        hamburger.innerHTML = '<div class="cross-icon"><div></div><div></div></div>';
     }
 
     function resetHamburgerIcons() {
-        document.querySelector('.left-hamburger').innerHTML = '<div></div><div></div><div></div>';
-        document.querySelector('.right-hamburger').innerHTML = '<div></div><div></div><div></div>';
+        document.querySelectorAll('.hamburger').forEach(hamburger => {
+            hamburger.innerHTML = '<div></div><div></div><div></div>';
+        });
     }
 
     // Close sidebars when clicking outside
     document.addEventListener('click', function(event) {
         const leftSidebar = document.getElementById('leftSidebar');
         const rightSidebar = document.getElementById('rightSidebar');
-        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target) &&
-            !event.target.classList.contains('hamburger')) {
+        const isHamburgerClick = event.target.classList.contains('hamburger');
+
+        // Close sidebars only if clicking outside both sidebars and the hamburger
+        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target) && !isHamburgerClick) {
             leftSidebar.classList.remove('active');
             rightSidebar.classList.remove('active');
             resetHamburgerIcons();
@@ -253,7 +255,7 @@
         }, 2000);
     }
 
-    // Close sidebars when mouse leaves the sidebar area
+    // Handle mouseout for sidebars to close them
     document.querySelectorAll('.sidebar').forEach(sidebar => {
         sidebar.addEventListener('mouseleave', () => {
             sidebar.classList.remove('active');
@@ -261,23 +263,14 @@
         });
     });
 
-    // Hover effect for hamburger
+    // Prevent closing the sidebar on mouse leave when hovering over hamburger
     document.querySelectorAll('.hamburger').forEach(hamburger => {
-        hamburger.addEventListener('mouseover', () => {
+        hamburger.addEventListener('mouseenter', () => {
             const sidebarId = hamburger.classList.contains('left-hamburger') ? 'leftSidebar' : 'rightSidebar';
             const sidebar = document.getElementById(sidebarId);
             if (!sidebar.classList.contains('active')) {
                 sidebar.classList.add('active');
                 updateHamburgerIcon(sidebarId);
-            }
-        });
-        
-        hamburger.addEventListener('mouseout', () => {
-            const sidebarId = hamburger.classList.contains('left-hamburger') ? 'leftSidebar' : 'rightSidebar';
-            const sidebar = document.getElementById(sidebarId);
-            if (sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-                resetHamburgerIcons();
             }
         });
     });

@@ -36,7 +36,7 @@
             color: #fff;
             overflow-y: auto;
             transition: transform 0.3s ease;
-            z-index: 1; /* Ensure sidebars are above other content */
+            z-index: 1;
         }
 
         .left-sidebar {
@@ -78,7 +78,7 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            z-index: 2; /* Ensure hamburger is above other content */
+            z-index: 10;
         }
 
         .left-hamburger {
@@ -99,6 +99,7 @@
 
         .close-icon {
             transform: rotate(45deg);
+            background-color: #333;
         }
 
         /* Main Content */
@@ -179,35 +180,38 @@
     // Toggle sidebar visibility
     function toggleSidebar(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
-        const otherSidebar = sidebarId === 'leftSidebar' ? document.getElementById('rightSidebar') : document.getElementById('leftSidebar');
+        const isActive = sidebar.classList.toggle('active');
         
-        sidebar.classList.toggle('active');
-        otherSidebar.classList.remove('active'); // Close the other sidebar
-        updateHamburgerIcon(sidebarId);
+        if (isActive) {
+            // Change hamburger to close icon
+            updateHamburgerIcon(sidebarId, true);
+        } else {
+            // Reset hamburger icon
+            updateHamburgerIcon(sidebarId, false);
+        }
     }
 
-    function updateHamburgerIcon(sidebarId) {
+    function updateHamburgerIcon(sidebarId, isOpen) {
         const hamburger = document.querySelector(`.hamburger.${sidebarId === 'leftSidebar' ? 'left-hamburger' : 'right-hamburger'}`);
-        hamburger.innerHTML = sidebarId === 'leftSidebar' ?
-            '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>' :
-            '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>';
+        hamburger.innerHTML = isOpen 
+            ? '<div class="close-icon"></div><div class="close-icon"></div><div class="close-icon"></div>' 
+            : '<div></div><div></div><div></div>';
     }
 
     // Close sidebars when clicking outside
     document.addEventListener('click', function(event) {
         const leftSidebar = document.getElementById('leftSidebar');
         const rightSidebar = document.getElementById('rightSidebar');
-        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target)) {
+        const leftHamburger = document.querySelector('.left-hamburger');
+        const rightHamburger = document.querySelector('.right-hamburger');
+
+        if (!leftSidebar.contains(event.target) && !rightSidebar.contains(event.target) && 
+            !leftHamburger.contains(event.target) && !rightHamburger.contains(event.target)) {
             leftSidebar.classList.remove('active');
             rightSidebar.classList.remove('active');
             resetHamburgerIcons();
         }
     });
-
-    function resetHamburgerIcons() {
-        document.querySelector('.left-hamburger').innerHTML = '<div></div><div></div><div></div>';
-        document.querySelector('.right-hamburger').innerHTML = '<div></div><div></div><div></div>';
-    }
 
     // Show "Coming Soon" message
     function showComingSoon() {
